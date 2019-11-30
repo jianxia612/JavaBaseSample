@@ -60,18 +60,26 @@ public class FastJsonFrequentlyUtils {
         return jsonData;
     }
 
-    // fastjson  字符串转List
-    public static JSONArray convertStringToList(String jsonString){
-        //List<T> list = JSONObject.parseArray(jsonString,T.class);
-        return null;
+    /**
+     * fastjson  字符串转List
+     * @param jsonString
+     * @param bean
+     * @param <T>
+     * @return
+     */
+    public static <T> List<T> convertStringToList(String jsonString,Class<T> bean){
+        List<T> list = JSONObject.parseArray(jsonString,bean);
+        return list;
     }
 
     /**
      * 自定义对象转化成json格式的字符串
+     * @param bean
+     * @param <T>
      * @return
      */
-    public static<T>  String convertBeantoJSONString(T person){
-        String peopleJson = JSON.toJSONString((T) person);
+    public static<T>  String convertBeantoJSONString(T bean){
+        String peopleJson = JSON.toJSONString(bean);
         System.out.println(peopleJson);
         return peopleJson;
     }
@@ -81,22 +89,20 @@ public class FastJsonFrequentlyUtils {
      * @return
      */
     public  static JSONArray convertListToJSONArray(List listData){
-        //List<T> list = new ArrayList<T>();
         JSONArray jsonArray= JSONArray.parseArray(JSON.toJSONString(listData));
         return jsonArray;
     }
 
     /**
+     * 针对JsonArray转换为对应的Bean对象
      * fastjson  JSONArray转List
      * @param jsonArray
      * @param bean
      * @return
-     * @throws ClassNotFoundException
      */
-    public  static <T> List<T>  convertJSONArrayToList(JSONArray jsonArray, T bean) throws ClassNotFoundException {
-        //JSONArray array = new JSONArray();
-        //List<T>  list = JSONObject.parseArray(jsonArray.toJSONString(), new TypeReference(T.class));
-        return null;
+    public  static <T> List<T>  convertJSONArrayToList(JSONArray jsonArray, Class<T> bean) {
+        List<T>  list = JSONObject.parseArray(jsonArray.toJSONString(), bean);
+        return list;
     }
 
     /**
@@ -177,6 +183,19 @@ public class FastJsonFrequentlyUtils {
        //9. convertJSONToMap 转换JSON对象为Map
         Map jsonMapObj=convertJSONToMap(jsonObj);
         System.out.println("9. jsonMap: "+jsonMapObj.toString());
+        // 10. convertJSONArrayToList
+        String jsonArrayListStr="[{\"name\":\"怪侠一枝梅\",\"age\":\"36\",\"id\":\"007\"},{\"name\":\"蜀山剑侠\",\"age\":\"28\",\"id\":\"008\"}]";
+        JSONArray jsonListArray=convertStringToJSONArray(jsonArrayListStr);
+        List<Person> personList=convertJSONArrayToList(jsonListArray,Person.class);
+        System.out.println("10. personList "+personList.toString());
+
+        //11. convertListToJSONArray
+        JSONArray personJsonArray=convertListToJSONArray(personList);
+        System.out.println("11. personJsonArray "+personJsonArray.toString());
+
+        //12. convertStringToList
+        List<Person> personList2=convertStringToList(jsonArrayListStr,Person.class);
+        System.out.println("12. personListOne "+personList2.toString());
         /**
         String jsonArrayStr = "";
         JSONArray jsonArray=convertStringToJSONArray(jsonArrayStr);
